@@ -1,6 +1,8 @@
-## Terraform Course
+# Terraform Course
 
-# Commands
+
+
+## Commands
 
 <!--Initialize-->
 terraform init
@@ -19,11 +21,11 @@ tf show -json | jq
 <!--Shows resources provisioned, ie. docker container -->
 tf state list
 
-# Functions
+## Functions
 join("-", [thing1, thing2])
 <!--outputs: thing1-thing2-->
 
-# Providers
+## Providers
 <!--using providers we can provision resources with UIDs for multi pod docker deployments-->
 resource "random_string" "random" {
   length           = 16
@@ -34,10 +36,10 @@ resource "random_string" "random" {
 <!--splat gets all containers created with count-->
 docker_container.nodered_container[*].name
 
-# Replacing degraded/damaged resources
+## Replacing degraded/damaged resources
 terraform apply -replace="aws_instance.example[0]"
 
-# 
+##  Handling unlocked state-lock file error 
 
 Cause: unlocked state(tf state-lock:false) when tf apply causing a corrupted state from
        multi applies in different consoles
@@ -52,5 +54,3 @@ resource "docker_container" "nodered_container2" {
 lastly, run this command:
 <!--The command might be outdated but the idea is to import the docker container manually-->
 terraform import docker_conatiner.foo $(docker inspect -f {{.ID}} foo)
-
-a
