@@ -52,3 +52,5 @@ resource "docker_container" "nodered_container2" {
 lastly, run this command:
 <!--The command might be outdated but the idea is to import the docker container manually-->
 terraform import docker_conatiner.foo $(docker inspect -f {{.ID}} foo)
+
+a
