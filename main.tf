@@ -14,19 +14,17 @@ resource "docker_image" "nodered_image" {
   name = "nodered/node-red:latest"
 }
 
-resource "random_string" "random" {-
-
-
-  # creates 2 copies
-  count   = 1
+resource "random_string" "random" {
+  # creates x copies
+  count   = 2
   length  = 4
   special = false
   upper   = false
 }
 
 resource "docker_container" "nodered_container" {
-  # creates 2 copies
-  count = 1
+  # creates x copies
+  count = 2
   // just a name so we can ref
   // we have to use [count.index] here to access the randomly generated names
   name  = join("-", ["nodered", random_string.random[count.index].result])
