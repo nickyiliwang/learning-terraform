@@ -31,6 +31,6 @@ resource "docker_container" "nodered_container" {
   image = docker_image.nodered_image.latest
   ports {
     internal = var.int_port
-    # external = 1880
+    external = var.ext_port
   }
 }

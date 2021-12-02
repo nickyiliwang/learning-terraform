@@ -102,3 +102,10 @@ from our state file.
 
 ## Variable Validation
 making sure a variable value is exactly what we want. ie. int_port of nodered should be 1880
+
+## Hiding variable values inside *.tfvars
+*.tfvars should be in a .gitignore file
+
+## Selecting vars files during a tf apply
+ie. using different .tfvars for different regions
+"tf plan --var-files west.tfvars" will give you a different ext_port value
