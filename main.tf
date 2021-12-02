@@ -9,6 +9,21 @@ terraform {
 
 provider "docker" {}
 
+variable "int_port" {
+  type = number
+  default = 1880
+}
+
+variable "ext_port" {
+  type = number
+  default = 1880
+}
+
+variable "resource_count" {
+  type = number
+  default = 2
+}
+
 resource "docker_image" "nodered_image" {
   // must be official name
   name = "nodered/node-red:latest"
@@ -16,7 +31,7 @@ resource "docker_image" "nodered_image" {
 
 resource "random_string" "random" {
   # creates x copies
-  count   = 2
+  count   = var.resource_count
   length  = 4
   special = false
   upper   = false
@@ -24,14 +39,14 @@ resource "random_string" "random" {
 
 resource "docker_container" "nodered_container" {
   # creates x copies
-  count = 2
+  count = var.resource_count
   // just a name so we can ref
   // we have to use [count.index] here to access the randomly generated names
   name  = join("-", ["nodered", random_string.random[count.index].result])
   image = docker_image.nodered_image.latest
   ports {
-    internal = 1880
-    # external = 1880
+    internal = var.int_port
+    external = var.ext_port
   }
 }
 

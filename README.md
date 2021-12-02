@@ -21,6 +21,22 @@ tf show -json | jq
 <!--Shows resources provisioned, ie. docker container -->
 tf state list
 
+## Variables
+Input variables are like function arguments.
+Parameters for a Terraform modules
+Declare variables in the root module
+
+*note: Terraform include environment variables (set by the shell where Terraform runs) 
+and expression variables (used to indirectly represent a value in an expression).
+
+variable "ext_port" {}
+
+## Environmental variables
+To export an variable, like above, we call "export TF_VAR_ext_port=1880",
+you must specify a value when exporting, must start with TF_VAR
+
+to remove it: "unset TF_VAR_ext_port"
+
 ## Functions
 join("-", [thing1, thing2])
 <!--outputs: thing1-thing2-->
@@ -82,4 +98,5 @@ from our state file.
 
 *note, we are doing this instead of an tf apply to avoid reapplying/removing our pod1
 
+** state rm should ONLY be used in an emergency or something seriously wrong with the deployments
 
