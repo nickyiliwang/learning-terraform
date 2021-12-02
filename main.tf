@@ -14,7 +14,9 @@ resource "docker_image" "nodered_image" {
   name = "nodered/node-red:latest"
 }
 
-resource "random_string" "random" {
+resource "random_string" "random" {-
+
+
   # creates 2 copies
   count   = 1
   length  = 4
