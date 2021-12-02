@@ -9,31 +9,6 @@ terraform {
 
 provider "docker" {}
 
-variable "int_port" {
-  type = number
-  default = 1880
-  
-  validation {
-    condition = var.int_port == 1880
-    error_message = "The internal port must be 1880." 
-  }
-}
-
-variable "ext_port" {
-  type = number
-  default = 1880
-  
-  validation {
-    condition = var.ext_port <= 65535 && var.ext_port > 0
-    error_message = "Must provide valid external port range 0 - 65535ga ."
-  }
-}
-
-variable "resource_count" {
-  type = number
-  default = 2
-}
-
 resource "docker_image" "nodered_image" {
   // must be official name
   name = "nodered/node-red:latest"
@@ -58,16 +33,4 @@ resource "docker_container" "nodered_container" {
     internal = var.int_port
     # external = 1880
   }
-}
-
-output "local-ip-plus-external-ports" {
-  # we are using a for loop + the join function to keep the code DRY
-  value       = [for i in docker_container.nodered_container[*]: join(":", [i.ip_address, i.ports[0].external])] 
-  description = "Local ip:external-port"
-}
-
-output "container-names" {
-# we are using the splat ([*]) syntax here to make our output DRY
-  value       = docker_container.nodered_container[*].name
-  description = "The name of the container"
 }
