@@ -100,3 +100,5 @@ from our state file.
 
 ** state rm should ONLY be used in an emergency or something seriously wrong with the deployments
 
+## Variable Validation
+making sure a variable value is exactly what we want. ie. int_port of nodered should be 1880
