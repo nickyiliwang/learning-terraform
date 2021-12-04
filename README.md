@@ -109,3 +109,17 @@ making sure a variable value is exactly what we want. ie. int_port of nodered sh
 ## Selecting vars files during a tf apply
 ie. using different .tfvars for different regions
 "tf plan --var-files west.tfvars" will give you a different ext_port value
+
+## Using Sensistive flag
+<!--Hiding variables from CLIs, ie. CICD with Gitlab, we don't want to leak secrets-->
+output "local-ip-plus-external-ports" {
+  value       =  <local ip value >
+  sensitive = true
+}
+<!--Using it with variables-->
+variable "ext_port" {
+  type      = number
+  sensitive = true
+}
+
+*note that tf-state isn't hiding this information

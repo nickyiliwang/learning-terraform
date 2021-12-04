@@ -14,6 +14,7 @@ variable "int_port" {
   type    = number
   default = 1880
 
+
   validation {
     condition     = var.int_port == 1880
     error_message = "The internal port must be 1880."
@@ -21,7 +22,7 @@ variable "int_port" {
 }
 
 variable "ext_port" {
-  type = number
+  type      = number
 
   validation {
     condition     = var.ext_port <= 65535 && var.ext_port > 0
@@ -61,15 +62,16 @@ resource "docker_container" "nodered_container" {
   }
 }
 
+output "container-names" {
+  # we are using the splat ([*]) syntax here to make our output DRY
+  value       = docker_container.nodered_container[*].name
+  description = "The name of the container"
+}
+
+
 # OutPuts
 output "local-ip-plus-external-ports" {
   # we are using a for loop + the join function to keep the code DRY
-  value       = [for i in docker_container.nodered_container[*]: join(":", [i.ip_address, i.ports[0].external])] 
+  value       = [for i in docker_container.nodered_container[*] : join(":", [i.ip_address, i.ports[0].external])]
   description = "Local ip:external-port"
-}
-
-output "container-names" {
-# we are using the splat ([*]) syntax here to make our output DRY
-  value       = docker_container.nodered_container[*].name
-  description = "The name of the container"
 }
