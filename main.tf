@@ -9,6 +9,20 @@ terraform {
 
 provider "docker" {}
 
+// Local-exec provisioner
+resource "null_resource" "dockervolume" {
+  provisioner "local-exec" {
+    // bash commands
+    // chown change file owner
+    // https://nodered.org/docs/getting-started/docker#using-a-host-directory-for-persistence-bind-mount
+    // this command is  not idempotent
+    # command = "mkdir noderedvol/ && sudo chown -R 1000:1000 noderedvol/"
+    // checking if the folder exists
+    command = "mkdir noderedvol/ || true && sudo chown -R 1000:1000 noderedvol/"
+  }
+}
+
+
 # Variables
 variable "int_port" {
   type    = number
@@ -35,7 +49,6 @@ variable "resource_count" {
   default = 1
 }
 
-
 resource "docker_image" "nodered_image" {
   // must be official name
   name = "nodered/node-red:latest"
@@ -60,6 +73,11 @@ resource "docker_container" "nodered_container" {
     internal = var.int_port
     external = var.ext_port
   }
+  volumes {
+    // host /home/pi/.node-red directory is bound to the container /data directory.
+    container_path = "/data"
+    host_path = "/home/ubuntu/environment/noderedvol"
+  }
 }
 
 output "container-names" {
@@ -67,7 +85,6 @@ output "container-names" {
   value       = docker_container.nodered_container[*].name
   description = "The name of the container"
 }
-
 
 # OutPuts
 output "local-ip-plus-external-ports" {

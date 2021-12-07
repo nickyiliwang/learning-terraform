@@ -123,3 +123,24 @@ variable "ext_port" {
 }
 
 *note that tf-state isn't hiding this information
+
+## Data persistence with Bind mount and Local-exec
+*Local-exec provisioner isn't the BEST, Ansible is better, use this as Last resort or unimportant things 
+
+in this example:
+
+<!--We provisioned a null resource and a Local-exec provisioner to store the data from node-red -->
+resource "null_resource" "dockervolume" {
+  provisioner "local-exec" {
+    command = "mkdir noderedvol/ || true && sudo chown -R 1000:1000 noderedvol/"
+  }
+}
+
+<!--In the container resource we specified where host and data folder is-->
+  volumes {
+    // host /home/pi/.node-red directory is bound to the container /data directory.
+    container_path = "/data"
+    host_path = "/home/ubuntu/environment/noderedvol"
+  }
+  
+  
