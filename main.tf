@@ -12,7 +12,7 @@ provider "docker" {}
 // Local-exec provisioner
 resource "null_resource" "dockervolume" {
   provisioner "local-exec" {
-    // bash commands
+    // bash script
     // chown change file owner
     // https://nodered.org/docs/getting-started/docker#using-a-host-directory-for-persistence-bind-mount
     // this command is  not idempotent
@@ -36,17 +36,17 @@ variable "int_port" {
 }
 
 variable "ext_port" {
-  type      = number
+  type = list(any)
 
-  validation {
-    condition     = var.ext_port <= 65535 && var.ext_port > 0
-    error_message = "Must provide valid external port range 0 - 65535."
-  }
+
+  # validation {
+  #   condition     = var.ext_port <= 65535 && var.ext_port > 0
+  #   error_message = "Must provide valid external port range 0 - 65535."
+  # }
 }
 
-variable "resource_count" {
-  type    = number
-  default = 1
+locals {
+  container_count = length(var.ext_port)
 }
 
 resource "docker_image" "nodered_image" {
@@ -55,8 +55,8 @@ resource "docker_image" "nodered_image" {
 }
 
 resource "random_string" "random" {
-  # creates x copies
-  count   = var.resource_count
+  # creates x copies, using local values
+  count   = local.container_count
   length  = 4
   special = false
   upper   = false
@@ -64,19 +64,20 @@ resource "random_string" "random" {
 
 resource "docker_container" "nodered_container" {
   # creates x copies
-  count = var.resource_count
+  count = local.container_count
   // just a name so we can ref
   // we have to use [count.index] here to access the randomly generated names
   name  = join("-", ["nodered", random_string.random[count.index].result])
   image = docker_image.nodered_image.latest
   ports {
     internal = var.int_port
-    external = var.ext_port
+    // ext_ports are now a list
+    external = var.ext_port[count.index]
   }
   volumes {
     // host /home/pi/.node-red directory is bound to the container /data directory.
     container_path = "/data"
-    host_path = "/home/ubuntu/environment/noderedvol"
+    host_path      = "/home/ubuntu/environment/noderedvol"
   }
 }
 

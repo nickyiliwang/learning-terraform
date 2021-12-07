@@ -31,6 +31,8 @@ and expression variables (used to indirectly represent a value in an expression)
 
 variable "ext_port" {}
 
+*function calls are not allowed in variables
+
 ## Environmental variables
 To export an variable, like above, we call "export TF_VAR_ext_port=1880",
 you must specify a value when exporting, must start with TF_VAR
@@ -143,4 +145,16 @@ resource "null_resource" "dockervolume" {
     host_path = "/home/ubuntu/environment/noderedvol"
   }
   
-  
+
+## Assigning more predictable external ports for multiple pods
+We want to have a port for every container provisioned using "count"
+
+1. tfvars ext_port value becomes a list
+2. docker_container resource external port change to: var.ext_port[count.index]
+
+## Local Values 
+Assigns a name to an expression
+Like a function's temporary local varaibles
+"Local Values" supports function calls unlike "variable resource"
+
+<!--We want to get the list from our tfvars file -->
