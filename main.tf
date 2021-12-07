@@ -39,10 +39,11 @@ variable "ext_port" {
   type = list(any)
 
 
-  # validation {
-  #   condition     = var.ext_port <= 65535 && var.ext_port > 0
-  #   error_message = "Must provide valid external port range 0 - 65535."
-  # }
+  validation {
+  // since it's a list, we are spreading the values and validating against the min/max range
+    condition     = max(var.ext_port...) <= 65535 &&  min(var.ext_port...) > 0
+    error_message = "Must provide valid external port range 0 - 65535."
+  }
 }
 
 locals {
