@@ -24,16 +24,16 @@ resource "null_resource" "dockervolume" {
 
 # Variables
 variable "ENV" {
-  type    = string
+  type        = string
   description = "environment to deploy to"
-  default = "DEV"
+  default     = "DEV"
 }
 
 variable "image" {
-  type = map
+  type        = map(any)
   description = "image for container depending on environment"
   default = {
-    DEV = "nodered/node-red/latest"
+    DEV  = "nodered/node-red/latest"
     PROD = "nodered/node-red/latest-minimal"
   }
 }
@@ -50,23 +50,32 @@ variable "int_port" {
 }
 
 variable "ext_port" {
-  type = list(any)
+  type = map(any)
 
 
+  # validating different ports for different env by accessing the ext_port map
+  # DEV
   validation {
-    // since it's a list, we are spreading the values and validating against the min/max range
-    condition     = max(var.ext_port...) <= 65535 && min(var.ext_port...) > 0
+    condition     = max(var.ext_port["DEV"]...) <= 65535 && min(var.ext_port["DEV"]...) >= 1980
     error_message = "Must provide valid external port range 0 - 65535."
   }
+  # PROD
+  
+  validation {
+    condition     = max(var.ext_port["PROD"]...) <= 65535 && min(var.ext_port["PROD"]...) >= 1880
+    error_message = "Must provide valid external port range 0 - 65535."
+  }
+
 }
 
 locals {
-  container_count = length(var.ext_port)
+  // lookup the map of ext_ports and get how many pods we are deploying with open ports
+  container_count = length(lookup(var.ext_port, var.ENV))
 }
 
 resource "docker_image" "nodered_image" {
-  // must be official name
-  name = "nodered/node-red:latest"
+  // lookup environment
+  name = lookup(var.image, var.ENV)
 }
 
 resource "random_string" "random" {
@@ -86,8 +95,8 @@ resource "docker_container" "nodered_container" {
   image = docker_image.nodered_image.latest
   ports {
     internal = var.int_port
-    // ext_ports are now a list
-    external = var.ext_port[count.index]
+    // ext_ports are now a map
+    external = lookup(var.ext_port, var.ENV)[count.index]
   }
   volumes {
     // host /home/pi/.node-red directory is bound to the container /data directory.
