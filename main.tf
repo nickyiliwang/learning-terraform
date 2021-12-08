@@ -22,8 +22,22 @@ resource "null_resource" "dockervolume" {
   }
 }
 
-
 # Variables
+variable "ENV" {
+  type    = string
+  description = "environment to deploy to"
+  default = "DEV"
+}
+
+variable "image" {
+  type = map
+  description = "image for container depending on environment"
+  default = {
+    DEV = "nodered/node-red/latest"
+    PROD = "nodered/node-red/latest-minimal"
+  }
+}
+
 variable "int_port" {
   type    = number
   default = 1880
@@ -40,8 +54,8 @@ variable "ext_port" {
 
 
   validation {
-  // since it's a list, we are spreading the values and validating against the min/max range
-    condition     = max(var.ext_port...) <= 65535 &&  min(var.ext_port...) > 0
+    // since it's a list, we are spreading the values and validating against the min/max range
+    condition     = max(var.ext_port...) <= 65535 && min(var.ext_port...) > 0
     error_message = "Must provide valid external port range 0 - 65535."
   }
 }
@@ -78,7 +92,10 @@ resource "docker_container" "nodered_container" {
   volumes {
     // host /home/pi/.node-red directory is bound to the container /data directory.
     container_path = "/data"
-    host_path      = "/home/ubuntu/environment/noderedvol"
+    // static paths are bad in modular deployments
+    // https://www.terraform.io/docs/language/expressions/references.html
+    // Use path.cwd to get the fs path of the current working directory
+    host_path = "${path.cwd}/noderedvol"
   }
 }
 

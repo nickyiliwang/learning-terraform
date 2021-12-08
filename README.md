@@ -158,3 +158,26 @@ Like a function's temporary local varaibles
 "Local Values" supports function calls unlike "variable resource"
 
 <!--We want to get the list from our tfvars file -->
+locals {
+  container_count = length(var.ext_port)
+}
+
+## Resource Validation within a list
+  validation {
+  <!--since it's a list, we are spreading the values and validating against the min/max range-->
+    condition     = max(var.ext_port...) <= 65535 &&  min(var.ext_port...) > 0
+    error_message = "Must provide valid external port range 0 - 65535."
+  }
+  
+## String interpolation
+<!--https://www.terraform.io/docs/configuration-0-11/interpolation.html-->
+<!--Using it in a conditional-->
+resource "aws_instance" "web" {
+  subnet = "${var.env == "production" ? var.prod_subnet : var.dev_subnet}"
+}
+
+## Using lookup() to deploy to different environments
+<!--https://www.terraform.io/docs/language/functions/lookup.html-->
+<!--lookup(map, key, default)-->
+lookup({dev="image1", prod = "image2"}, "prod")
+OUTPUT "image2"
