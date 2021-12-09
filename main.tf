@@ -64,12 +64,11 @@ variable "ext_port" {
 
 locals {
   // lookup the map of ext_ports and get how many pods we are deploying with open ports
-  container_count = length(lookup(var.ext_port, terraform.workspace))
+  container_count = length(var.ext_port[terraform.workspace])
 }
 
 resource "docker_image" "nodered_image" {
-  // lookup environment
-  name = lookup(var.image, terraform.workspace)
+  name = var.image[terraform.workspace]
 }
 
 resource "random_string" "random" {
@@ -90,8 +89,8 @@ resource "docker_container" "nodered_container" {
   image = docker_image.nodered_image.latest
   ports {
     internal = var.int_port
-    // ext_port are now a map
-    external = lookup(var.ext_port, terraform.workspace)[count.index]
+    // ext_port is a map
+    external = var.ext_port[terraform.workspace][count.index]
   }
   volumes {
     // host /home/pi/.node-red directory is bound to the container /data directory.
@@ -103,13 +102,13 @@ resource "docker_container" "nodered_container" {
   }
 }
 
+# OutPuts
 output "container-names" {
   # we are using the splat ([*]) syntax here to make our output DRY
   value       = docker_container.nodered_container[*].name
   description = "The name of the container"
 }
 
-# OutPuts
 output "local-ip-plus-external-ports" {
   # we are using a for loop + the join function to keep the code DRY
   value       = [for i in docker_container.nodered_container[*] : join(":", [i.ip_address, i.ports[0].external])]

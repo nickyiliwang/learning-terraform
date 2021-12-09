@@ -1,5 +1,9 @@
 # Terraform Course
 
+## Basics
+tf.lock.hcl file is important to keep provider version consistent
+.terraform folder containers Cached provider plugins
+
 
 
 ## Commands
