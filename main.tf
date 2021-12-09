@@ -23,18 +23,13 @@ resource "null_resource" "dockervolume" {
 }
 
 # Variables
-variable "ENV" {
-  type        = string
-  description = "environment to deploy to"
-  default     = "DEV"
-}
 
 variable "image" {
   type        = map(any)
   description = "image for container depending on environment"
   default = {
-    DEV  = "nodered/node-red/latest"
-    PROD = "nodered/node-red/latest-minimal"
+    DEV  = "nodered/node-red:latest"
+    PROD = "nodered/node-red:latest-minimal"
   }
 }
 
@@ -60,7 +55,6 @@ variable "ext_port" {
     error_message = "Must provide valid external port range 0 - 65535."
   }
   # PROD
-  
   validation {
     condition     = max(var.ext_port["PROD"]...) <= 65535 && min(var.ext_port["PROD"]...) >= 1880
     error_message = "Must provide valid external port range 0 - 65535."
@@ -70,12 +64,12 @@ variable "ext_port" {
 
 locals {
   // lookup the map of ext_ports and get how many pods we are deploying with open ports
-  container_count = length(lookup(var.ext_port, var.ENV))
+  container_count = length(lookup(var.ext_port, terraform.workspace))
 }
 
 resource "docker_image" "nodered_image" {
   // lookup environment
-  name = lookup(var.image, var.ENV)
+  name = lookup(var.image, terraform.workspace)
 }
 
 resource "random_string" "random" {
@@ -91,12 +85,13 @@ resource "docker_container" "nodered_container" {
   count = local.container_count
   // just a name so we can ref
   // we have to use [count.index] here to access the randomly generated names
-  name  = join("-", ["nodered", random_string.random[count.index].result])
+  // adding workspace name to container name
+  name  = join("-", ["nodered", terraform.workspace, random_string.random[count.index].result])
   image = docker_image.nodered_image.latest
   ports {
     internal = var.int_port
-    // ext_ports are now a map
-    external = lookup(var.ext_port, var.ENV)[count.index]
+    // ext_port are now a map
+    external = lookup(var.ext_port, terraform.workspace)[count.index]
   }
   volumes {
     // host /home/pi/.node-red directory is bound to the container /data directory.

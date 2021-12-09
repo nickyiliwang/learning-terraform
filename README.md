@@ -112,6 +112,9 @@ making sure a variable value is exactly what we want. ie. int_port of nodered sh
 ie. using different .tfvars for different regions
 "tf plan --var-files west.tfvars" will give you a different ext_port value
 
+## Using Input Variables during apply
+terraform apply -var="image_id=ami-abc123"
+
 ## Using Sensistive flag
 <!--Hiding variables from CLIs, ie. CICD with Gitlab, we don't want to leak secrets-->
 output "local-ip-plus-external-ports" {
@@ -181,3 +184,29 @@ resource "aws_instance" "web" {
 <!--lookup(map, key, default)-->
 lookup({dev="image1", prod = "image2"}, "prod")
 OUTPUT "image2"
+
+## TF Workspaces
+- Have a different folder for where persistent data like: Terraform state
+- Some backend allows multiple states to be associated with a single configuration. 
+- The config still has only one backend, but multiple distinct instances of that config
+- No need to setup a new backend or changing authentication credentials.
+
+Scenario:
+I can deploy and manage my DEV environment and PROD environment separatly
+Switching to DEV environment and delpoying/destroying only affects that workspace
+
+<!--Example with S3-->
+<!--https://www.terraform.io/docs/language/settings/backends/s3.html-->
+Does work with AWS S3
+<!--Commands-->
+tf workspace new <insert name here>
+new, list, show, select, and delete
+
+### Referencing workspaces
+If we can ref our workspaces in our script, there's no need for the ENV variable
+
+variable "ENV" {
+  type        = string
+  description = "environment to deploy to"
+  default     = "DEV"
+}
