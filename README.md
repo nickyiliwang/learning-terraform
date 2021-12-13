@@ -2,4 +2,5 @@
 
 ## Notes
 
-Basics on tf: [basics.md](./1-basics/NOTES.md) 
+[Basics on TF](./1-basics/BASICS.md) 
+[TF Modules](./2-modules/MODULES.md) 
