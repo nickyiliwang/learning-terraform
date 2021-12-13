@@ -11,8 +11,8 @@ resource "null_resource" "dockervolume" {
   }
 }
 
-resource "docker_image" "nodered_image" {
-  name = var.image[terraform.workspace]
+module "image" {
+  source = "./image"
 }
 
 resource "random_string" "random" {
@@ -30,7 +30,9 @@ resource "docker_container" "nodered_container" {
   // we have to use [count.index] here to access the randomly generated names
   // adding workspace name to container name
   name  = join("-", ["nodered", terraform.workspace, random_string.random[count.index].result])
-  image = docker_image.nodered_image.latest
+  // ref like var.xx, we are reffing a module output resource
+  image = module.image.image_out
+
   ports {
     internal = var.int_port
     // ext_port is a map
