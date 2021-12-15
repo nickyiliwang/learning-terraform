@@ -18,6 +18,22 @@ root-variables => root-main ("image_in") => used by image-variables => ref by im
 ## Terraform Graph
 Diagnostic tool
 <!--sudo apt install graphviz-->
-coupled with graphviz it becomes a dependency visualization graph
+1. coupled with graphviz it becomes a dependency visualization graph
+
 <!-- tf graph | dot -Tpdf graph-plan.pdf -->
-we can pipe tf graph output into the graphviz program and produce an pdf visual
+
+2. we can pipe tf graph output into the graphviz program and produce an pdf visual
+
+<!-- tf graph --type=destroy | dot -Tpdf > graph-plan-destroyed.pdf
+ -->
+3. we can output planned destroyed resources for the next tf plan, there are other --type flags we can use
+
+## implicit vs. explicit dependencies
+In this template we need the noderedvol volume to done creating before we can move files into it and use it in a docker container.
+
+### implicitly 
+by stating the noderedvol id in the join funciton in the docker_container resource name, we are telling the container resource to wait for the noderedvol finish creating. Implicitly.
+
+### explicity
+<!--depends_on = [null_resource.dockervolume]-->
+by using the depends_on property within docker_container resource

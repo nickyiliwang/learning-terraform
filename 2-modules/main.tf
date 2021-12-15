@@ -7,6 +7,8 @@ resource "null_resource" "dockervolume" {
     // this command is  not idempotent
     # command = "mkdir noderedvol/ && sudo chown -R 1000:1000 noderedvol/"
     // checking if the folder exists
+   
+   // sleep 60 artificially introduces a dependency issue in the template
     command = "mkdir noderedvol/ || true && sudo chown -R 1000:1000 noderedvol/"
   }
 }
@@ -25,6 +27,7 @@ resource "random_string" "random" {
 }
 
 resource "docker_container" "nodered_container" {
+  depends_on = [null_resource.dockervolume]
   # creates x copies
   count = local.container_count
   // just a name so we can ref
