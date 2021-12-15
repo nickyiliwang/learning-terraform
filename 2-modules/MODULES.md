@@ -15,4 +15,9 @@ Pass in variables from root module into child module for consumption
 ### Variable flow from root => /image
 root-variables => root-main ("image_in") => used by image-variables => ref by image-main ("name = var.image-in")
 
-## 
+## Terraform Graph
+Diagnostic tool
+<!--sudo apt install graphviz-->
+coupled with graphviz it becomes a dependency visualization graph
+<!-- tf graph | dot -Tpdf graph-plan.pdf -->
+we can pipe tf graph output into the graphviz program and produce an pdf visual
