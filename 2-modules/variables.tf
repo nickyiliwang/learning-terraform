@@ -1,7 +1,11 @@
 variable "image" {
   type        = map(any)
   description = "image for container depending on environment"
-
+  default = {
+    default = "nodered/node-red:latest"
+    DEV  = "nodered/node-red:latest"
+    PROD = "nodered/node-red:latest-minimal"
+  }
 }
 
 variable "int_port" {

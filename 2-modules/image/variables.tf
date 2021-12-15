@@ -1,3 +1,3 @@
 variable "image_in" {
-  description = "image for container"
+  description = "name of image for container"
 }
