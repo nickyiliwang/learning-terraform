@@ -1,18 +1,3 @@
-// Local-exec provisioner
-resource "null_resource" "dockervolume" {
-  provisioner "local-exec" {
-    // bash script
-    // chown change file owner
-    // https://nodered.org/docs/getting-started/docker#using-a-host-directory-for-persistence-bind-mount
-    // this command is  not idempotent
-    # command = "mkdir noderedvol/ && sudo chown -R 1000:1000 noderedvol/"
-    // checking if the folder exists
-   
-   // sleep 60 artificially introduces a dependency issue in the template
-    command = "mkdir noderedvol/ || true && sudo chown -R 1000:1000 noderedvol/"
-  }
-}
-
 module "image" {
   source = "./image"
   image_in = var.image[terraform.workspace]
