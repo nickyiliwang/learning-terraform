@@ -26,28 +26,26 @@ resource "random_string" "random" {
   upper   = false
 }
 
-resource "docker_container" "nodered_container" {
+module "container" {
+  source = "./container"
   depends_on = [null_resource.dockervolume]
   # creates x copies
   count = local.container_count
   // just a name so we can ref
   // we have to use [count.index] here to access the randomly generated names
   // adding workspace name to container name
-  name  = join("-", ["nodered", terraform.workspace, random_string.random[count.index].result])
+  // name => name_in, passing into module
+  name_in  = join("-", ["nodered", terraform.workspace, random_string.random[count.index].result])
   // ref like var.xx, we are reffing a module output resource
-  image = module.image.image_out
+  // image => image_in passing into module
+  image_in = module.image.image_out
 
-  ports {
-    internal = var.int_port
-    // ext_port is a map
-    external = var.ext_port[terraform.workspace][count.index]
-  }
-  volumes {
-    // host /home/pi/.node-red directory is bound to the container /data directory.
-    container_path = "/data"
-    // static paths are bad in modular deployments
-    // https://www.terraform.io/docs/language/expressions/references.html
-    // Use path.cwd to get the fs path of the current working directory
-    host_path = "${path.cwd}/noderedvol"
-  }
+  // ports
+  int_port_in = var.int_port
+  ext_port_in = var.ext_port[terraform.workspace][count.index]
+  
+  // volumes
+  vol_container_path_in = "/data"
+  vol_host_path_in = "${path.cwd}/noderedvol"
+  
 }
