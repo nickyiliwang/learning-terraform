@@ -13,7 +13,6 @@ resource "random_string" "random" {
 
 module "container" {
   source = "./container"
-  depends_on = [null_resource.dockervolume]
   # creates x copies
   count = local.container_count
   // just a name so we can ref

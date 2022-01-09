@@ -38,4 +38,26 @@ by stating the noderedvol id in the join funciton in the docker_container resour
 <!--depends_on = [null_resource.dockervolume]-->
 by using the depends_on property within docker_container resource
 
-##
+## removing null_resource
+by reomving null-resource (and the depends_on in the container module root main.tf file).
+we are moving the volume provisioned to store nodered data into the container module
+In this case:
+1. Volume is tightly coupled with the container 
+    a. Volume destroys with its container
+2. Less typing and extra scripts
+
+## why do we need a docker_volume resource
+When we stop using null-resources as a nodered volume
+and placed it in the container module
+like such:
+ volumes {
+    container_path = var.vol_container_path_in
+    // replaces host_path
+    volume_name = "${var.name_in}-volume"
+  }
+
+Issue:
+Even when we do a tf destroy command, 
+if we do: docker volume ls
+the volumes are not destoyed with the container
+this is unintended behavior
