@@ -11,7 +11,7 @@ locals {
       container_path = "/data"
     }
     influxdb = {
-      image = var.image["influxdb"][terraform.workspace]
+      image           = var.image["influxdb"][terraform.workspace]
       container_count = length(var.ext_port["influxdb"][terraform.workspace])
       // ports
       int            = 8086

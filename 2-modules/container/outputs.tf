@@ -1,13 +1,20 @@
-# // We are outputing values back to the root module from the container module
+output "application_access" {
+# https://www.terraform.io/language/expressions/for#result-types
+    value = {for x in docker_container.app_container[*]: x.name => join(":", [x.ip_address], x.ports[*]["external"])}
+} 
 
-# output "container-names-out" {
-#   # we are using the splat ([*]) syntax here to make our output DRY
-#   value       = docker_container.nodered_container.name
-#   description = "The name of the container"
-# }
-
-# output "local-ip-plus-external-ports-out" {
-#   # we are using a for loop + the join function to keep the code DRY
-#   value       = [for i in docker_container.nodered_container[*] : join(":", [i.ip_address, i.ports[0].external])]
-#   description = "Local ip:external-port"
-# }
+# OUTPUT
+# application_access = [
+#   {
+#     "influxdb" = {
+#       "application_access" = {
+#         "influxdb-DEV-agyv" = "172.17.0.2:8186"
+#       }
+#     }
+#     "nodered" = {
+#       "application_access" = {
+#         "nodered-DEV-ic5p" = "172.17.0.3:1980"
+#       }
+#     }
+#   },
+# ]
