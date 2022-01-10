@@ -61,3 +61,10 @@ Even when we do a tf destroy command,
 if we do: docker volume ls
 the volumes are not destoyed with the container
 this is unintended behavior
+
+Solution:
+We use docker_volume resource instead
+Use meta-arguments => lifecycles
+
+
+

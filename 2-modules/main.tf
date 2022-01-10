@@ -1,6 +1,21 @@
+// Using locals variables to store metadata, called deployment
+locals {
+  deployment = {
+    nodered = {
+      image = var.image["nodered"][terraform.workspace]
+    }
+    influxdb = {
+      image = var.image["influxdb"][terraform.workspace]
+    }
+  }
+}
+
 module "image" {
-  source = "./image"
-  image_in = var.image[terraform.workspace]
+  source   = "./image"
+  // https://www.terraform.io/language/meta-arguments/for_each
+  for_each = local.deployment
+  // accessing local variables
+  image_in = each.value.image
 }
 
 resource "random_string" "random" {
@@ -19,17 +34,15 @@ module "container" {
   // we have to use [count.index] here to access the randomly generated names
   // adding workspace name to container name
   // name => name_in, passing into module
-  name_in  = join("-", ["nodered", terraform.workspace, random_string.random[count.index].result])
+  name_in = join("-", ["nodered", terraform.workspace, random_string.random[count.index].result])
   // ref like var.xx, we are reffing a module output resource
   // image => image_in passing into module
-  image_in = module.image.image_out
+  image_in = module.image["nodered"].image_out
 
   // ports
   int_port_in = var.int_port
   ext_port_in = var.ext_port[terraform.workspace][count.index]
-  
+
   // volumes
   vol_container_path_in = "/data"
-  vol_host_path_in = "${path.cwd}/noderedvol"
-  
 }
