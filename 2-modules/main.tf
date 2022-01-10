@@ -2,47 +2,44 @@
 locals {
   deployment = {
     nodered = {
-      image = var.image["nodered"][terraform.workspace]
+      // lookup the map of ext_ports and get how many pods we are deploying with open ports
+      container_count = length(var.ext_port["nodered"][terraform.workspace])
+      image           = var.image["nodered"][terraform.workspace]
+      // ports
+      int            = 1880
+      ext            = var.ext_port["nodered"][terraform.workspace]
+      container_path = "/data"
     }
     influxdb = {
       image = var.image["influxdb"][terraform.workspace]
+      container_count = length(var.ext_port["influxdb"][terraform.workspace])
+      // ports
+      int            = 8086
+      ext            = var.ext_port["influxdb"][terraform.workspace]
+      container_path = "/var/lib/influxdb"
     }
   }
 }
 
 module "image" {
-  source   = "./image"
+  source = "./image"
   // https://www.terraform.io/language/meta-arguments/for_each
   for_each = local.deployment
   // accessing local variables
   image_in = each.value.image
 }
 
-resource "random_string" "random" {
-  # creates x copies, using local values
-  count   = local.container_count
-  length  = 4
-  special = false
-  upper   = false
-}
-
 module "container" {
-  source = "./container"
-  # creates x copies
-  count = local.container_count
-  // just a name so we can ref
-  // we have to use [count.index] here to access the randomly generated names
-  // adding workspace name to container name
-  // name => name_in, passing into module
-  name_in = join("-", ["nodered", terraform.workspace, random_string.random[count.index].result])
-  // ref like var.xx, we are reffing a module output resource
-  // image => image_in passing into module
-  image_in = module.image["nodered"].image_out
+  source   = "./container"
+  count_in = each.value.container_count
+  for_each = local.deployment
+  name_in  = each.key
+  image_in = module.image[each.key].image_out
 
   // ports
-  int_port_in = var.int_port
-  ext_port_in = var.ext_port[terraform.workspace][count.index]
+  int_port_in = each.value.int
+  ext_port_in = each.value.ext
 
   // volumes
-  vol_container_path_in = "/data"
+  vol_container_path_in = each.value.container_path
 }

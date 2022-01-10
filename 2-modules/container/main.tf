@@ -1,5 +1,15 @@
+
+resource "random_string" "random" {
+  count = var.count_in
+  for_each = local.deployment
+  length   = 4
+  special  = false
+  upper    = false
+}
+
 resource "docker_container" "nodered_container" {
-  name  = var.name_in
+  count = var.count_in
+  name  = var.join("-", [var.name_in, terraform.workspace, random_string.random[count.index].result])
   image = var.image_in
 
   ports {
@@ -16,6 +26,7 @@ resource "docker_container" "nodered_container" {
 }
 
 resource "docker_volume" "container_volume" {
+  count = var.count_in
   // https://www.terraform.io/language/meta-arguments/lifecycle
   // Error: Instance cannot be destroyed
   // More control on when can the volume be destroyed

@@ -66,5 +66,7 @@ Solution:
 We use docker_volume resource instead
 Use meta-arguments => lifecycles
 
-
+## for_each
+for_each uses the value of the map instead of an index
+which makes deployment outputs much more readable and identifiable
 
