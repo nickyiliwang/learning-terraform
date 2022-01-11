@@ -20,6 +20,16 @@ resource "docker_container" "app_container" {
     volume_name = docker_volume.container_volume[count.index].name
   }
 
+  provisioner "local-exec" {
+    command    = "echo ${self.name}: ${self.ip_address}:${join("", [for x in self.ports[*]["external"] : x])} >> containers.txt"
+    on_failure = fail
+  }
+
+  provisioner "local-exec" {
+    when    = destroy
+    command = "rm -f containers.txt"
+  }
+
 }
 
 resource "docker_volume" "container_volume" {
@@ -30,5 +40,21 @@ resource "docker_volume" "container_volume" {
   name = "${var.name_in}-${random_string.random[count.index].result}-volume"
   lifecycle {
     prevent_destroy = false
+  }
+  provisioner "local-exec" {
+    # https://www.terraform.io/language/resources/provisioners/syntax#destroy-time-provisioners
+    when    = destroy
+    command = "mkdir ${path.cwd}/../backup/"
+    # https://www.terraform.io/language/resources/provisioners/syntax#failure-behavior
+    on_failure = continue
+  }
+  provisioner "local-exec" {
+    when = destroy
+    # https://www.howtogeek.com/248780/how-to-compress-and-extract-files-using-the-tar-command-on-linux/
+    # tar command ref
+    # https://registry.terraform.io/providers/kreuzwerker/docker/latest/docs/resources/volume#read-only
+    # reference to the self.mountpoint
+    command    = "sudo tar -czvf ${path.cwd}/../backup/${self.name}.tar.gz ${self.mountpoint}/"
+    on_failure = fail
   }
 }

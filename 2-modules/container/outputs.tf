@@ -1,7 +1,7 @@
 output "application_access" {
-# https://www.terraform.io/language/expressions/for#result-types
-    value = {for x in docker_container.app_container[*]: x.name => join(":", [x.ip_address], x.ports[*]["external"])}
-} 
+  # https://www.terraform.io/language/expressions/for#result-types
+  value = { for x in docker_container.app_container[*] : x.name => join(":", [x.ip_address], x.ports[*]["external"]) }
+}
 
 # OUTPUT
 # application_access = [

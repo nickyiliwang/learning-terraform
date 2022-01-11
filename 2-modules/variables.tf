@@ -10,6 +10,10 @@ variable "image" {
       DEV  = "quay.io/influxdb/influxdb:v2.0.2"
       PROD = "quay.io/influxdb/influxdb:v2.0.2"
     }
+    grafana = {
+      DEV  = "grafana/grafana-oss:latest-ubuntu"
+      PROD = "grafana/grafana-enterprise:latest-ubuntu"
+    }
   }
 }
 

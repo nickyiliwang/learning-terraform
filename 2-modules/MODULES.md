@@ -70,3 +70,28 @@ Use meta-arguments => lifecycles
 for_each uses the value of the map instead of an index
 which makes deployment outputs much more readable and identifiable
 
+## Container volume backup with the self object
+<!--https://www.terraform.io/language/resources/provisioners/syntax#the-self-object-->
+
+## Why this echo didn't work
+Error:
+│     ├────────────────
+│     │ count.index is 2
+│     │ self.ports is list of object with 1 element
+
+ provisioner "local-exec" {
+    command = "echo ${self.name}: ${self.ip_address}:${self.ports[count.index]["external"]} >> containers.txt"
+    on_failure = fail
+  }
+  
+Solution:
+join fn + for loop for each external port
+"<same as above>${join("", [for x in self.ports[*]["external"] : x])} >> containers.txt"
+
+## Dynamic blocks
+<!--https://www.terraform.io/language/expressions/dynamic-blocks-->
+Usecase here:
+1. grafana has multiple container_paths we want to expose
+2. ie. /etc/grafana
+3. we can only expose on path right now, ref: locals.tf
+

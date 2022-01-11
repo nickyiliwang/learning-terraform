@@ -2,10 +2,7 @@
 tf.lock.hcl file is important to keep provider version consistent
 .terraform folder containers Cached provider plugins
 
-
-
 ## Commands
-
 <!--Initialize-->
 terraform init
 
@@ -150,6 +147,17 @@ resource "null_resource" "dockervolume" {
     host_path = "/home/ubuntu/environment/noderedvol"
   }
   
+## local-exec
+<!--https://www.terraform.io/language/resources/provisioners/local-exec#local-exec-provisioner-->
+1. Invokes a local executable after a resource is created
+2. This invokes a process on the machine running Terraform, not on the resource
+Example:
+Creating a backup folder during the container destroy lifecycle
+provisioner "local-exec" {
+  when = destroy
+  command = "mkdir ${path.cwd}/../backup/"
+  on_failure = continue
+}
 
 ## Assigning more predictable external ports for multiple pods
 We want to have a port for every container provisioned using "count"
@@ -212,3 +220,10 @@ variable "ENV" {
   description = "environment to deploy to"
   default     = "DEV"
 }
+
+## path object
+<!--https://www.terraform.io/language/expressions/references#path-cwd-->
+path.cwd is the filesystem path of the current working directory.
+In normal use of Terraform this is the same as path.root,
+but some advanced uses of Terraform run it from a directory
+other than the root module directory, causing these paths to be different.
