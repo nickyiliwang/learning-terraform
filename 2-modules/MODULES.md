@@ -72,6 +72,11 @@ which makes deployment outputs much more readable and identifiable
 
 ## Container volume backup with the self object
 <!--https://www.terraform.io/language/resources/provisioners/syntax#the-self-object-->
+<!--https://www.howtogeek.com/248780/how-to-compress-and-extract-files-using-the-tar-command-on-linux/-->
+<!--https://registry.terraform.io/providers/kreuzwerker/docker/latest/docs/resources/volume#read-only-->
+<!--reference to the self.mountpoint-->
+this tar command gips the volumes mountpoint and moves it into the backup folder
+command = "sudo tar -czvf ${path.cwd}/../backup/${self.name}.tar.gz ${self.mountpoint}/"
 
 ## Why this echo didn't work
 Error:
@@ -95,3 +100,13 @@ Usecase here:
 2. ie. /etc/grafana
 3. we can only expose on path right now, ref: locals.tf
 
+## inspecting multiple docker volumes
+docker inspect $(docker ps -a -q) | grep volume
+
+## Volume nesting
+Why:
+1. When we provision multiple grafana containers with 2 volumes each
+2. One set of volumes exits prematuresly
+3. 2 docker containers should have 4 volumes, 2 each
+
+module nesting
