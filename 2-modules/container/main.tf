@@ -17,8 +17,8 @@ resource "docker_container" "app_container" {
   dynamic "volumes" {
     for_each = var.volumes_in
     content {
-    container_path = volumes.value["container_path_for_each"]
-    volume_name = module.volume[count.index].volume_output[volumes.key]
+      container_path = volumes.value["container_path_for_each"]
+      volume_name    = module.volume[count.index].volume_output[volumes.key]
     }
 
   }
@@ -38,7 +38,7 @@ resource "docker_container" "app_container" {
 module "volume" {
   source = "./volume"
   // we need the volume module to run as many times as the docker container
-  count = var.count_in
+  count        = var.count_in
   volume_count = length(var.volumes_in)
-  volume_name = "${var.name_in}-${terraform.workspace}-${random_string.random[count.index].result}-volume"
+  volume_name  = "${var.name_in}-${terraform.workspace}-${random_string.random[count.index].result}-volume"
 }
