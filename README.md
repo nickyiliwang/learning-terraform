@@ -3,7 +3,7 @@
 ## Notes
 1. [Basics on TF](./1-basics/BASICS.md) 
 2. [TF Modules](./2-modules/MODULES.md) 
-3. [Weather Dashboard Project](./3-weather/WEEATHER.md) 
+3. [Deploy on AWS](./3-AWS/AWS.md) 
 
 ## Misc
 curl command for public ip:
