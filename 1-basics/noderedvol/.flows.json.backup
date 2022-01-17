@@ -1,0 +1,166 @@
+[
+    {
+        "id": "42cfdb4339f366da",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "040937edd6bee76e",
+        "type": "inject",
+        "z": "42cfdb4339f366da",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 190,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "aa3182c26218cb88",
+        "type": "debug",
+        "z": "42cfdb4339f366da",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 310,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "7e8a33d3dfe2580e",
+        "type": "complete",
+        "z": "42cfdb4339f366da",
+        "name": "",
+        "scope": [],
+        "uncaught": false,
+        "x": 110,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "729902e47baec933",
+        "type": "link in",
+        "z": "42cfdb4339f366da",
+        "name": "",
+        "links": [],
+        "x": 235,
+        "y": 200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c72d877f6bf8c47a",
+        "type": "function",
+        "z": "42cfdb4339f366da",
+        "name": "",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6bb4996c7ff7d0a3",
+        "type": "range",
+        "z": "42cfdb4339f366da",
+        "minin": "",
+        "maxin": "",
+        "minout": "",
+        "maxout": "",
+        "action": "scale",
+        "round": false,
+        "property": "payload",
+        "name": "",
+        "x": 280,
+        "y": 620,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f956be9450f0b50e",
+        "type": "delay",
+        "z": "42cfdb4339f366da",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 150,
+        "y": 580,
+        "wires": [
+            [
+                "c72d877f6bf8c47a",
+                "6bb4996c7ff7d0a3"
+            ]
+        ]
+    },
+    {
+        "id": "6db37b7724c348ac",
+        "type": "inject",
+        "z": "42cfdb4339f366da",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 80,
+        "y": 160,
+        "wires": [
+            []
+        ]
+    }
+]
