@@ -35,5 +35,52 @@ Attributes:
 enable_dns_hostnames = true
 enable_dns_support   = true
 
+## Subnetting
+Review for dividing networks
+[Sunny's Video](https://www.youtube.com/watch?v=ecCuyq-Wprc) 
+[Sunny's table](https://o.quizlet.com/1XQN.GACbk3TWNRitGHrfg.jpg) 
+[Subnetting /16](https://www.youtube.com/watch?v=OQ-r_IfeB8c) 
+[Practice](https://docs.google.com/spreadsheets/d/1U7h3xOY5FKOsHedjIOsJKQMobHrAHZcW9MCSxRyjVYE/edit#gid=0) 
 
+Example:
+1. if you need 3 subnetworks from the ip: 192.168.4.0/24
+2. According to the table, we can split it into 4 subnets to satisfy the 3
+3. We will have 64 host IDs (uniquely identifies a host on a given TCP/IP network)
+4. 64 also includes the network and broadcast id 
+5. /26 is the new subnet masks
+6. Network id will be divided into [ _0/26, _64/26, _128/26, _192/26]
+7. ie. 192.168.4.0/26 => Host ID Range: 192.168.1 - 192.168.4.62, #Hosts: 62, BroadcastID: _63
+
+### Host vs. Network address
+Host has a single IP address, and a network has several.
+Example:
+Host address for one of the servers here in my house is 
+192.168. 1.249. It's a single address which is 
+part of the network address block based on 192.168.
+
+## cidrsubnet() function 
+<!--https://www.terraform.io/language/functions/cidrsubnet-->
+cidrsubnet(prefix, newbits, netnum)
+
+newbits is the number of additional bits with which to extend the prefix.
+
+netnum is a whole number that can be represented 
+as a binary integer with no more than newbits binary digits, 
+which will be used to populate the additional bits added to the prefix.
+
+> cidrsubnet("172.16.0.0/12", 4, 2)
+172.18.0.0/16
+> cidrsubnet("10.1.2.0/24", 4, 15)
+10.1.2.240/28
+
+## subnetting function
+[for i in range(1,6,2) : cidrsubnet("10.123.0.0/16", 8, i)]
+
+1. range(min, max-1, increment) => range(1,6,2) => 1 , 3 , 5
+2. for loops the max range, and increments on the 3rd octat, + 8 newbits
+3. OUTPUTS: [
+  "10.123.1.0/24",
+  "10.123.3.0/24",
+  "10.123.5.0/24",
+]
 

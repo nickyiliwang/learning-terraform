@@ -18,11 +18,11 @@ resource "aws_vpc" "tf_vpc" {
 }
 
 resource "aws_subnet" "tf_public_subnet" {
-  count = length(var.public_cidrs)
+  count = var.public_sn_count
   vpc_id = aws_vpc.tf_vpc.id 
   cidr_block = var.public_cidrs[count.index]
   map_public_ip_on_launch = true
-  // hardcoding for now
+  // round-robin all availability zones
   availability_zone = ["us-west-2a", "us-west-2b", "us-west-2c", "us-west-2d"][count.index]
   
   tags = {
@@ -32,7 +32,7 @@ resource "aws_subnet" "tf_public_subnet" {
 }
 
 resource "aws_subnet" "tf_private_subnet" {
-  count = length(var.private_cidrs)
+  count = var.private_sn_count
   vpc_id = aws_vpc.tf_vpc.id
   cidr_block = var.private_cidrs[count.index]
   availability_zone = ["us-west-2a", "us-west-2b", "us-west-2c", "us-west-2d"][count.index]
