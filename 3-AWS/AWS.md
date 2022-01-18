@@ -1,6 +1,5 @@
 # Deployment on AWS
 
-<<<<<<< HEAD
 [What we are building](../0-resources/AWS-3-tier-infra.png) 
 
 <!--https://rancher.com/docs/k3s/latest/en/-->
@@ -29,5 +28,3 @@
 
 
 
-=======
->>>>>>> 3e3a83416b35c7fe4d4d989adf68db5ee5344ba5
