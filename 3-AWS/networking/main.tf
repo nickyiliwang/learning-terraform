@@ -7,14 +7,8 @@ resource "random_integer" "random" {
 }
 
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc
-
 resource "aws_vpc" "tf_vpc" {
   cidr_block = var.vpc_cidr
-  //The following VPC attributes determine the DNS support provided for your VPC. 
-  //Instance launched into the VPC receives a public DNS hostname 
-  //if it is assigned a public IPv4 address or an Elastic IP address at creation. 
-  //If you enable both attributes for a VPC that didn't previously have them both enabled, 
-  //instances that were already launched into that VPC receive public DNS hostnames if they have a public IPv4 address or an Elastic IP address.
   enable_dns_hostnames = true
   enable_dns_support   = true
 
@@ -22,3 +16,30 @@ resource "aws_vpc" "tf_vpc" {
     Name = "tf_vpc-${random_integer.random.id}"
   }
 }
+
+resource "aws_subnet" "tf_public_subnet" {
+  count = length(var.public_cidrs)
+  vpc_id = aws_vpc.tf_vpc.id 
+  cidr_block = var.public_cidrs[count.index]
+  map_public_ip_on_launch = true
+  // hardcoding for now
+  availability_zone = ["us-west-2a", "us-west-2b", "us-west-2c", "us-west-2d"][count.index]
+  
+  tags = {
+    // subnets generally start the numbering from 1
+    Name = "tf_public_sn_${count.index + 1}"
+  }
+}
+
+resource "aws_subnet" "tf_private_subnet" {
+  count = length(var.private_cidrs)
+  vpc_id = aws_vpc.tf_vpc.id
+  cidr_block = var.private_cidrs[count.index]
+  availability_zone = ["us-west-2a", "us-west-2b", "us-west-2c", "us-west-2d"][count.index]
+  
+  tags = {
+    Name = "tf_private_sn_${count.index + 1}"
+  }
+}
+
+

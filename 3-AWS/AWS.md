@@ -14,7 +14,6 @@
 9. VPC and IGW for internet traffic
 10. "remote" ? provisioners for copying k3s.yaml files from the local machine (cloud9 node workspace machine) to k3s control node
 
-
 ## Using Terraform cloud to monitor state setup
 1. have an TF account, create an organization
 2. copy CLI-driven runs config into working dir, paste it in a tf file (backend.tf)
@@ -25,6 +24,16 @@
 
 ## Setting up a AWS VPC
 <!--https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc-->
+
+## VPC DNS support provided settings 
+Instance launched into the VPC receives a public DNS hostname 
+if it is assigned a public IPv4 address or an Elastic IP address at creation. 
+If you enable both attributes for a VPC that didn't previously have them both enabled, 
+instances that were already launched into that VPC receive public DNS hostnames if they have a public IPv4 address or an Elastic IP address.
+
+Attributes:
+enable_dns_hostnames = true
+enable_dns_support   = true
 
 
 
