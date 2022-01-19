@@ -2,6 +2,11 @@
 
 [What we are building](../0-resources/AWS-3-tier-infra.png) 
 
+## Resource referencing
+Most Resources are referenced by id
+ie. aws_vpc.my_vpc.id
+
+
 <!--https://rancher.com/docs/k3s/latest/en/-->
 1. Rancher K3s: lighter version of K8
 2. 1 K3s control plane + 1 K3s node for master master replication
@@ -109,3 +114,19 @@ duple and flatten it into an array.
 flatten(values({for i in range(5): i => var.az_list}))
 
 [Example](/0-resources/playground/duplicating_an_array_x_times.tf)
+
+## *important default route and default route table
+In network/main.tf
+we are directing all traffic in the public route table towards the internet gateway for internet
+with: resource "aws_route" "default_route" 
+
+The following resource block specifies that the private route table is using the default
+route table created when the vpc is created, thus referencing aws_vpc.my_vpc.default_route_table_id
+
+resource "aws_default_route_table" "tf_private_rt" {
+  default_route_table_id = aws_vpc.tf_vpc.default_route_table_id
+}
+
+## aws_route_table
+<!--https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table-->
+1. we are gonna make the default rt private so nothing is accidently exposed
