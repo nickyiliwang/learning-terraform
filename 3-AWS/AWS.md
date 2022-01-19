@@ -84,3 +84,28 @@ which will be used to populate the additional bits added to the prefix.
   "10.123.5.0/24",
 ]
 
+## TF Data Sources - aws_availability_zones
+<!--https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones-->
+  we can refrence this value in our aws_subnet resource without hardcoding all available zones
+  availability_zone = data.aws_availability_zones.available.names[count.index]
+
+## Spread out subnet deployment into AZs with random_shuffle
+<!--https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/shuffle-->
+resource "random_shuffle" "az" {
+  input        = ["us-west-1a", "us-west-1c", "us-west-1d", "us-west-1e"]
+  result_count = 2
+}
+
+### for_each would also work here
+1. In the root main.tf we could have an locals map, mapping the number of 
+   public and private subnets we need 
+
+
+### We could use a for loop and produce a list that's more round robin rather than random
+we use a for loop to loop over the number of times we want to repeat this list value (5),
+and we only want the values from the result, hence we use values function to get the 
+duple and flatten it into an array.
+
+flatten(values({for i in range(5): i => var.az_list}))
+
+[Example](/0-resources/playground/duplicating_an_array_x_times.tf)

@@ -6,6 +6,15 @@ resource "random_integer" "random" {
   max = 100
 }
 
+data "aws_availability_zones" "available" {
+  state = "available"
+}
+
+resource "random_shuffle" "az_list" {
+  input = data.aws_availability_zones.available.names
+  result_count = var.max_subnets
+}
+
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc
 resource "aws_vpc" "tf_vpc" {
   cidr_block = var.vpc_cidr
@@ -23,7 +32,7 @@ resource "aws_subnet" "tf_public_subnet" {
   cidr_block = var.public_cidrs[count.index]
   map_public_ip_on_launch = true
   // round-robin all availability zones
-  availability_zone = ["us-west-2a", "us-west-2b", "us-west-2c", "us-west-2d"][count.index]
+  availability_zone = random_shuffle.az_list.result[count.index]
   
   tags = {
     // subnets generally start the numbering from 1
@@ -35,11 +44,9 @@ resource "aws_subnet" "tf_private_subnet" {
   count = var.private_sn_count
   vpc_id = aws_vpc.tf_vpc.id
   cidr_block = var.private_cidrs[count.index]
-  availability_zone = ["us-west-2a", "us-west-2b", "us-west-2c", "us-west-2d"][count.index]
+  availability_zone = random_shuffle.az_list.result[count.index]
   
   tags = {
     Name = "tf_private_sn_${count.index + 1}"
   }
 }
-
-

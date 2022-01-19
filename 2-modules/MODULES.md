@@ -110,3 +110,9 @@ Why:
 3. 2 docker containers should have 4 volumes, 2 each
 
 module nesting
+
+## Locals
+<!--https://learn.hashicorp.com/tutorials/terraform/locals?in=terraform/configuration-language-->
+1. Locals don't change values during or between Terraform runs such as plan, apply, or destroy. 
+2. You can use locals to give a name to the result of any Terraform expression, and re-use that name throughout your configuration. 
+3. Unlike input variables, locals are not set directly by users of your configuration.
