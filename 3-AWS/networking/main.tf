@@ -119,15 +119,15 @@ resource "aws_security_group" "tf_sg" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-  
+
 }
 
 resource "aws_db_subnet_group" "tf_rds_subnet_group" {
   count = var.db_subnet_group ? 1 : 0
-  name = "tf_rds_subnet_group"
+  name  = "tf_rds_subnet_group"
   // using all private subnets with the splat
   subnet_ids = aws_subnet.tf_private_subnet.*.id
-  
+
   tags = {
     Name = "tf_rds_sng"
   }
