@@ -15,15 +15,15 @@ resource "docker_image" "nodered_image" {
 }
 
 resource "random_string" "random" {
-  length = 4
+  length  = 4
   special = false
-  upper = false
+  upper   = false
 }
 
 resource "random_string" "random2" {
-  length = 4
+  length  = 4
   special = false
-  upper = false
+  upper   = false
 }
 
 resource "docker_container" "nodered_container" {

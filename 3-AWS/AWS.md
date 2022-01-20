@@ -129,4 +129,17 @@ resource "aws_default_route_table" "tf_private_rt" {
 
 ## aws_route_table
 <!--https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route_table-->
-1. we are gonna make the default rt private so nothing is accidently exposed
+1. main associated rt is private so nothing is accidently exposed
+2. The subnets in the vpc will be implicitly associated with this rt
+
+## Lifecycle policy and IGW
+if the vpc cidr changes and the whole stack needs to be recreated
+Problem:
+Internet Gateway isn't recreated, it's reassociated (updated in place) to the new vpc
+which isn't created yet
+
+Solution:
+Lifecycle policy should be added on the VPC, and the "create_before_destroy" set to true 
+
+## Security Groups
+<!--https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group-->

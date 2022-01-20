@@ -9,7 +9,7 @@ module "image" {
 module "container" {
   source   = "./container"
   count_in = each.value.container_count
-  
+
   for_each = local.deployment
   name_in  = each.key
   image_in = module.image[each.key].image_out
