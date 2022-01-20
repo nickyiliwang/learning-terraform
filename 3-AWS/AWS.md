@@ -153,3 +153,8 @@ this dynamnic block is nested within the tf_sg for_each block, so it has access 
 security_groups variable, the "each keyword" is looping "public"/"private" objects
 each.value.ingress => security_groups.public.ingress
 ingress.value.from => ingress.[dynamic value].from => ingress.ssh.from
+
+## Creating a subnet group(of 3) for rds to use 
+  db_subnet_group = true
+  count = var.db_subnet_group ? 1 : 0
+Using conditionals tells the sn group to provision or not
