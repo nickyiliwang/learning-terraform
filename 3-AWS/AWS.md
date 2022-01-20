@@ -143,3 +143,13 @@ Lifecycle policy should be added on the VPC, and the "create_before_destroy" set
 
 ## Security Groups
 <!--https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group-->
+dynamic "ingress" {
+  for_each = each.value.ingress
+  content {
+    from_port = ingress.value.from
+  }
+}
+this dynamnic block is nested within the tf_sg for_each block, so it has access to
+security_groups variable, the "each keyword" is looping "public"/"private" objects
+each.value.ingress => security_groups.public.ingress
+ingress.value.from => ingress.[dynamic value].from => ingress.ssh.from
