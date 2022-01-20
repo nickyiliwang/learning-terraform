@@ -4,6 +4,7 @@ module "networking" {
   source           = "./networking"
   vpc_cidr         = local.vpc_cidr
   access_ip        = var.access_ip
+  security_groups  = local.security_groups
   public_sn_count  = 2
   private_sn_count = 3
   // 200 aws hard limit

@@ -96,16 +96,20 @@ resource "aws_default_route_table" "tf_private_rt" {
 
 // SSH
 resource "aws_security_group" "tf_sg" {
-  name        = "public_sg"
-  description = "Public SG"
   vpc_id      = aws_vpc.tf_vpc.id
+  for_each    = var.security_groups
+  name        = each.value.name
+  description = each.value.description
 
-  ingress {
-    from_port = 22
-    to_port   = 22
-    protocol  = "tcp"
-    // plural mostly means list
-    cidr_blocks = [var.access_ip]
+  dynamic "ingress" {
+    for_each = each.value.ingress
+    content {
+      from_port = ingress.value.from
+      to_port   = ingress.value.to
+      protocol  = ingress.value.protocol
+      // plural mostly means list
+      cidr_blocks = ingress.value.cidr_blocks
+    }
   }
 
   egress {
