@@ -164,4 +164,17 @@ output "tf_rds_subnet_group_name_out" {
   value = aws_db_subnet_group.tf_rds_subnet_group[0].name
 }
 
-## 
+## Adding a load balancer (ALB)
+<!--https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb-->
+1. provisioned a alb resource
+2. took the public security group ids
+    aws_security_group.tf_sg["public"].id
+    we took the public security group id by using the "public" index value and got the id
+3. took all the subnet ids from the networking module
+   aws_subnet.tf_public_subnet.*.id
+4. using all the output values we can populate "public_sg" and public_subnets so the
+   "load-balancing" module can make use of it
+
+
+
+

@@ -15,16 +15,22 @@ module "networking" {
   db_subnet_group = true
 }
 
-module "database" {
-  source                 = "./database"
-  db_storage             = 10 # 1 Gib = 1024mb
-  db_engine_version      = "5.7.22"
-  db_instance_class      = "db.t2.micro"
-  db_name                = "rancher"
-  db_user                = "nick"
-  db_password            = "asd123asd123"
-  db_identifier          = "tf-db"
-  skip_db_final_snapshot = true
-  db_subnet_group_name   = module.networking.tf_rds_subnet_group_name_out
-  vpc_security_group_ids = [module.networking.rds_sg_out]
+# module "database" {
+#   source                 = "./database"
+#   db_storage             = 10 # 1 Gib = 1024mb
+#   db_engine_version      = "5.7.22"
+#   db_instance_class      = "db.t2.micro"
+#   db_name                = "rancher"
+#   db_user                = "nick"
+#   db_password            = "asd123asd123"
+#   db_identifier          = "tf-db"
+#   skip_db_final_snapshot = true
+#   db_subnet_group_name   = module.networking.tf_rds_subnet_group_name_out
+#   vpc_security_group_ids = [module.networking.rds_sg_out]
+# }
+
+module "load-balance" {
+  source = "./load-balance"
+  public_sg = module.networking.public_sg_out
+  public_subnets = module.networking.public_subnets
 }
