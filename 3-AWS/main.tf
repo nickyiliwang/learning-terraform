@@ -30,7 +30,14 @@ module "networking" {
 # }
 
 module "load-balance" {
-  source = "./load-balance"
-  public_sg = module.networking.public_sg_out
-  public_subnets = module.networking.public_subnets
+  source                 = "./load-balance"
+  public_sg              = module.networking.public_sg_out
+  public_subnets         = module.networking.public_subnets
+  vpc_id                 = module.networking.vpc_id
+  tg_port                = 80
+  tg_protocol            = "HTTP"
+  lb_healthy_threshold   = 2
+  lb_unhealthy_threshold = 2
+  lb_timeout             = 3
+  lb_interval            = 30
 }

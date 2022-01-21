@@ -175,6 +175,8 @@ output "tf_rds_subnet_group_name_out" {
 4. using all the output values we can populate "public_sg" and public_subnets so the
    "load-balancing" module can make use of it
 
+## uuid() and substring to get an short unique id for alb target group
+<!--https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_target_group-->
 
 
 
