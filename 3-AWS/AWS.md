@@ -158,3 +158,10 @@ ingress.value.from => ingress.[dynamic value].from => ingress.ssh.from
   db_subnet_group = true
   count = var.db_subnet_group ? 1 : 0
 Using conditionals tells the sn group to provision or not
+
+*accessing the output will be tricky
+output "tf_rds_subnet_group_name_out" {
+  value = aws_db_subnet_group.tf_rds_subnet_group[0].name
+}
+
+## 
