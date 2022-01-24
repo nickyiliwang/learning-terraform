@@ -215,3 +215,8 @@ We are using the default action of forward, others include
 authenticate-cognito, redirect and more
 <!--https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-listeners.html-->
 
+## Choosing AMIs from tf data-sources
+<!--https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ami-->
+1. got an ami-id from ec2 console
+2. ami-074251216af698218 is a ubuntu AMI
+3. 
