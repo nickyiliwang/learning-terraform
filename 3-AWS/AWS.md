@@ -175,8 +175,43 @@ output "tf_rds_subnet_group_name_out" {
 4. using all the output values we can populate "public_sg" and public_subnets so the
    "load-balancing" module can make use of it
 
-## uuid() and substring to get an short unique id for alb target group
+## Preventing uuid random name to re-run and force replace old
+uuid() and substring to get an short unique id for alb target group
 <!--https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_target_group-->
+  name     = "tf-lb-tg-${substr(uuid(), 0, 5)}"
+Problem:
+uuid() reruns every apply so it might break running connections
 
+Solution:
 
+lifecycle {
+  ignore_changes = [name]
+}
+
+## Preventing update loop issue with changing port values
+Problem:
+tf_port                = 80
+listener_port          = 80
+changing these ports will result a force update with the lb_listener
+if the target group/listener port is different and the resources are updating
+The listener is stuck in update loop
+  
+Solution:
+a new target group is created before the old one is destroyed and thus the listener
+can have an arn to work with
+  lifecycle {
+    ignore_changes = [name]
+    create_before_destroy = true
+  }
+
+## Adding a load balancer listener
+<!--https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener-->
+### Using the arn value of other resources
+load_balancer_arn = aws_lb.<your lb name>..arn
+target_group_arm = aws_lb_target_group.<your tg name>.arn
+
+### Default action
+We are using the default action of forward, others include 
+authenticate-cognito, redirect and more
+<!--https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-listeners.html-->
 
