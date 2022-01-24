@@ -23,3 +23,7 @@ replace the functionality of the terraform.tfvars file.
 Solutions:
 1. Store the settings in Terraform Cloud rather than in your repository.
 2. Create a file with an .auto.tfvars suffix. 
+
+## TODO
+1. HTTPS with ACM
+2. 
