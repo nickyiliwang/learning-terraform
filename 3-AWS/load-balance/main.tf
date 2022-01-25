@@ -14,7 +14,7 @@ resource "aws_lb_target_group" "tf_tg" {
   vpc_id   = var.vpc_id
 
   lifecycle {
-    ignore_changes = [name]
+    ignore_changes        = [name]
     create_before_destroy = true
   }
 

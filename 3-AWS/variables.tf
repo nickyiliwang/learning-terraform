@@ -5,7 +5,9 @@ variable "aws_secret_key" {}
 
 variable "aws_region" {
   //Oregon region
-  default = "us-west-2"
+  # default = "us-west-2"
+  // Stockholm with free tier t3.micro ec2
+  default = "eu-north-1"
 }
 
 
