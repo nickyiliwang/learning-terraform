@@ -286,3 +286,8 @@ nginx = {
   }
 will make sure port 8000 is exposed to the intenet
 
+## Adding instances to the target group arn
+<!--output from load-balance module-->
+output lb_target_group_arn_out, value = aws_lb_target_group.tf_tg.arn
+<!--import the value into the compute module-->
+lb_target_group_arn = module.load-balance.lb_target_group_arn_out
