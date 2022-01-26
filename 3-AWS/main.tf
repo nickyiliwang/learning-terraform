@@ -15,19 +15,19 @@ module "networking" {
   db_subnet_group = true
 }
 
-# module "database" {
-#   source                 = "./database"
-#   db_storage             = 10 # 1 Gib = 1024mb
-#   db_engine_version      = "5.7.22"
-#   db_instance_class      = "db.t2.micro"
-#   db_name                = "rancher"
-#   db_user                = "nick"
-#   db_password            = "asd123asd123"
-#   db_identifier          = "tf-db"
-#   skip_db_final_snapshot = true
-#   db_subnet_group_name   = module.networking.tf_rds_subnet_group_name_out
-#   vpc_security_group_ids = [module.networking.rds_sg_out]
-# }
+module "database" {
+  source                 = "./database"
+  db_storage             = 10 # 1 Gib = 1024mb
+  db_engine_version      = "5.7.22"
+  db_instance_class      = "db.t2.micro"
+  db_name                = var.db_name
+  db_user                = var.db_user
+  db_password            = var.db_password
+  db_identifier          = "tf-db"
+  skip_db_final_snapshot = true
+  db_subnet_group_name   = module.networking.tf_rds_subnet_group_name_out
+  vpc_security_group_ids = [module.networking.rds_sg_out]
+}
 
 module "load-balance" {
   source                 = "./load-balance"
@@ -53,4 +53,10 @@ module "compute" {
   vol_size        = 10
   key_name        = "tfkey"
   public_key_path = "/home/ubuntu/.ssh/tf_key.pub"
+  user_data_path  = "${path.root}/user-data.tpl"
+  db_endpoint     = module.database.db_endpoint_out
+  db_name         = var.db_name
+  db_user         = var.db_user
+  db_password     = var.db_password
+
 }
