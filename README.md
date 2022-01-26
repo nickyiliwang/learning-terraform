@@ -26,4 +26,6 @@ Solutions:
 
 ## TODO
 1. HTTPS with ACM
+    a. [Video tutorial](https://www.youtube.com/watch?v=Ge-dkZgqLKg)
+    a. [Text](https://www.missioncloud.com/blog/how-to-generate-and-renew-an-ssl-certificate-using-terraform-on-aws)
 2. 

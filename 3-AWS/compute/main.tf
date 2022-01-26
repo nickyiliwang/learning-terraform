@@ -19,8 +19,8 @@ resource "random_id" "tf_ec2_node_id" {
 }
 
 resource "aws_instance" "tf_ec2_node" {
-  count         = var.instance_count # 1
-  instance_type = var.instance_type  # t3.micro is required for rancher k3 to have the cores
+  count         = var.instance_count
+  instance_type = var.instance_type # t3.micro is required for rancher k3 to have the cores
   ami           = data.aws_ami.k3_server_ami.id
 
   tags = {
@@ -32,9 +32,7 @@ resource "aws_instance" "tf_ec2_node" {
   subnet_id              = var.public_subnets[count.index]
   # user_data = ""
   root_block_device {
-    volume_size = -var.vol_size # 10 Gib   
+    volume_size = var.vol_size
   }
-
-
 
 }

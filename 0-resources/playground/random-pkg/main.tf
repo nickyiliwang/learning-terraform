@@ -1,9 +1,8 @@
 
-resource "random_id" "asd" {
+resource "random_id" "test" {
     byte_length = 2
 }
 
 output "asd" {
-    value = random_id.asd.
-    
+    value = random_id.test.dec
 }
