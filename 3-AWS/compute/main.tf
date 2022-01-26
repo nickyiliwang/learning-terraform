@@ -48,9 +48,9 @@ resource "aws_instance" "tf_ec2_node" {
     // underscore makes it invalid as an dns name
     nodename    = "tf-k3-ec2-node-${random_id.tf_ec2_node_id[count.index].dec}"
     db_endpoint = var.db_endpoint
-    dbname     = var.db_name
-    dbuser     = var.db_user
-    dbpassword = var.db_password
+    dbname      = var.db_name
+    dbuser      = var.db_user
+    dbpassword  = var.db_password
   })
 
 

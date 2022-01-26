@@ -251,5 +251,32 @@ root/user-data.tpl:
 to access the root path => user-data.tpl template
   user_data_path = "${path.root/user-data.tpl}"
   
-## SSh into the K3 cluster
+## SSh into the K3 cluster and checking for the running k3 node
 ssh -i ~/.ssh/<your key name> ubuntu@<ec2 public ip>
+kubectl get nodes
+
+## Deploying NGINX to kube and exposing it
+<!--create the yaml file while ssh into the ec2 node-->
+nano deployment.yaml 
+[paste the content from this file](../0-resources/deployment.yaml)
+kubectl apply -f deployment.yaml
+
+if we do a:
+kubectl get pods
+
+we get one pending and one running pod because one of them has no where to go
+we only have one running ec2 instance
+change instance_count to 2
+
+now 2 pods are running
+
+### Exposing NGINX within public_sg
+adding:
+nginx = {
+    from        = 8000
+    to          = 8000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+will make sure port 8000 is exposed to the intenet
+
