@@ -44,11 +44,13 @@ resource "aws_instance" "tf_ec2_node" {
   vpc_security_group_ids = [var.public_sg]
   subnet_id              = var.public_subnets[count.index]
   user_data = templatefile(var.user_data_path, {
-    nodename    = "tf_k3_ec2_node-${random_id.tf_ec2_node_id[count.index].dec}"
+    // nodename doesn't like underscores as well 
+    // underscore makes it invalid as an dns name
+    nodename    = "tf-k3-ec2-node-${random_id.tf_ec2_node_id[count.index].dec}"
     db_endpoint = var.db_endpoint
-    db_name     = var.db_name
-    db_user     = var.db_user
-    db_password = var.db_password
+    dbname     = var.db_name
+    dbuser     = var.db_user
+    dbpassword = var.db_password
   })
 
 

@@ -250,3 +250,6 @@ root/user-data.tpl:
 <!--https://www.terraform.io/language/functions/templatefile-->
 to access the root path => user-data.tpl template
   user_data_path = "${path.root/user-data.tpl}"
+  
+## SSh into the K3 cluster
+ssh -i ~/.ssh/<your key name> ubuntu@<ec2 public ip>

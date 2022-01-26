@@ -19,7 +19,7 @@ module "database" {
   source                 = "./database"
   db_storage             = 10 # 1 Gib = 1024mb
   db_engine_version      = "5.7.22"
-  db_instance_class      = "db.t2.micro"
+  db_instance_class      = "db.t3.micro"
   db_name                = var.db_name
   db_user                = var.db_user
   db_password            = var.db_password
@@ -34,13 +34,13 @@ module "load-balance" {
   public_sg              = module.networking.public_sg_out
   public_subnets         = module.networking.public_subnets
   vpc_id                 = module.networking.vpc_id
-  tg_port                = 80
+  tg_port                = 8000
   tg_protocol            = "HTTP"
   lb_healthy_threshold   = 2
   lb_unhealthy_threshold = 2
   lb_timeout             = 3
   lb_interval            = 30
-  listener_port          = 80
+  listener_port          = 8000
   listener_protocol      = "HTTP"
 }
 
