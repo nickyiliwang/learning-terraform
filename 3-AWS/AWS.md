@@ -219,4 +219,14 @@ authenticate-cognito, redirect and more
 <!--https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ami-->
 1. got an ami-id from ec2 console
 2. ami-074251216af698218 is a ubuntu AMI
-3. 
+3. ref compute/main.tf for rest
+
+## Creating an ssh key for ec2 instances
+1. ssh-keygen -t rsa -f /home/ubuntu//.ssh/<your key name>
+2. Create an tf resource to access the public key file
+3. To access this file, do <file(/home/ubuntu/.ssh/<your key name>.pub)>
+
+## forcing the ec2 node name to change every apply with keepers att
+<!--https://registry.terraform.io/providers/hashicorp/random/latest/docs#resource-keepers-->
+by triggering the random_id resource to trigger everytime we need it
+

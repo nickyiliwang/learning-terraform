@@ -16,6 +16,19 @@ data "aws_ami" "k3_server_ami" {
 resource "random_id" "tf_ec2_node_id" {
   byte_length = 2
   count       = var.instance_count
+
+  // Generate a new id each time we switch to a new key_name
+  // Can do with ami as well 
+  keepers {
+    key_name = var.key_name
+  }
+
+}
+
+// ssh key_name
+resource "aws_key_pair" "tf_ec2_auth" {
+  key_name   = var.key_name
+  public_key = file(var.public_key_path)
 }
 
 resource "aws_instance" "tf_ec2_node" {
@@ -27,7 +40,7 @@ resource "aws_instance" "tf_ec2_node" {
     Name = "tf_k3_ec2_node-${random_id.tf_ec2_node_id[count.index].dec}"
   }
 
-  # key_name = ""
+  key_name               = aws_key_pair.tf_ec2_auth.id
   vpc_security_group_ids = [var.public_sg]
   subnet_id              = var.public_subnets[count.index]
   # user_data = ""
