@@ -58,4 +58,5 @@ module "compute" {
   db_name         = var.db_name
   db_user         = var.db_user
   db_password     = var.db_password
+  lb_target_group_arn = module.load-balance.lb_target_group_arn_out
 }

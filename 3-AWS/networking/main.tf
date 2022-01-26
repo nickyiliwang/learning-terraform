@@ -71,6 +71,15 @@ resource "aws_internet_gateway" "tf_igw" {
   }
 }
 
+// set the default vpc route table to a private rt
+resource "aws_default_route_table" "tf_private_rt" {
+  default_route_table_id = aws_vpc.tf_vpc.default_route_table_id
+
+  tags = {
+    Name = "tf_private_rt"
+  }
+}
+
 resource "aws_route_table" "tf_public_rt" {
   vpc_id = aws_vpc.tf_vpc.id
 
@@ -86,15 +95,7 @@ resource "aws_route" "default_route" {
   gateway_id             = aws_internet_gateway.tf_igw.id
 }
 
-resource "aws_default_route_table" "tf_private_rt" {
-  default_route_table_id = aws_vpc.tf_vpc.default_route_table_id
-
-  tags = {
-    Name = "tf_private_rt"
-  }
-}
-
-// SSH
+// Public, ssh, and nginx ingress, open for egress
 resource "aws_security_group" "tf_sg" {
   vpc_id      = aws_vpc.tf_vpc.id
   for_each    = var.security_groups
@@ -122,6 +123,8 @@ resource "aws_security_group" "tf_sg" {
 
 }
 
+// grouping the 3 private subnets into a group
+// for RDS deployment into these subnets
 resource "aws_db_subnet_group" "tf_rds_subnet_group" {
   count = var.db_subnet_group ? 1 : 0
   name  = "tf_rds_subnet_group"

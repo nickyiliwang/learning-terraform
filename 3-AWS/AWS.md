@@ -164,6 +164,12 @@ output "tf_rds_subnet_group_name_out" {
   value = aws_db_subnet_group.tf_rds_subnet_group[0].name
 }
 
+## Generating Provider Schema
+To take a look at the password field to see if its hidden and look at other fields
+Install jq, and pipe the provider json schema and output as a file command:
+sudo apt-get install jq
+tf provider schema -json | jq '.' > provider-schema.json
+
 ## Adding a load balancer (ALB)
 <!--https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb-->
 1. provisioned a alb resource
@@ -208,7 +214,7 @@ can have an arn to work with
 <!--https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener-->
 ### Using the arn value of other resources
 load_balancer_arn = aws_lb.<your lb name>..arn
-target_group_arm = aws_lb_target_group.<your tg name>.arn
+target_group_arn = aws_lb_target_group.<your tg name>.arn
 
 ### Default action
 We are using the default action of forward, others include 

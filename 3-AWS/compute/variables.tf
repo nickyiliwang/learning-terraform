@@ -12,3 +12,4 @@ variable "db_endpoint" {}
 variable "db_name" {}
 variable "db_user" {}
 variable "db_password" {}
+variable "lb_target_group_arn" {}
