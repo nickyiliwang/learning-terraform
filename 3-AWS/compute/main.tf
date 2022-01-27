@@ -58,6 +58,13 @@ resource "aws_instance" "tf_ec2_node" {
     volume_size = var.vol_size
   }
 
+  provisioner "local-exec" {
+    command = templatefile("${path.root}/scp_script.tpl", {
+      nodeip   = self.public_ip
+      k3s_path = "${path.root}/../"
+      nodename = self.tags.Name
+    })
+  }
 }
 
 // Placing each ec2 instance (id) into the target group we have in the networking module

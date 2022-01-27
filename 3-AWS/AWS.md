@@ -324,3 +324,6 @@ will give us:
   "tf_k3_ec2_node-33895": "16.170.224.159",
   "tf_k3_ec2_node-45008": "13.53.53.248"
 }
+
+## Installing kubectl, gain access to rancher node ec2, 
+<!--https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/-->
