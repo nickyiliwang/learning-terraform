@@ -325,5 +325,31 @@ will give us:
   "tf_k3_ec2_node-45008": "13.53.53.248"
 }
 
-## Installing kubectl, gain access to rancher node ec2, 
+## Installing kubectl, gain access to rancher node ec2
 <!--https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/-->
+With local exec provisioner
+command = templatefile("${path.root}/scp_script.tpl", {
+  nodeip   = self.public_ip
+  <!--location of the config yaml file copied fromt he remote instance-->
+  k3s_path = "${path.root}/../"  
+  nodename = self.tags.Name
+})
+export KUBECONFIG=../k3s-tf_k3_ec2_node-33895.yaml
+
+## Secure Copy with remote exec provisioners
+no more sleep 60 command in our local-exec scp_script.tpl file, 
+it arbitrarly delays the copy command to wait for the ec2 to generate the file
+
+We use the remote-exec to ssh into the k3 node instance and check with the delay.sh script
+
+in the delay.sh file
+we are waiting for the k3s.yaml file to exist before ending the loop
+while [ ! -f /etc/rancher/k3s/k3s.yaml ]; do
+    echo -e "Waiting for k3s to bootstrap..."
+    sleep 3
+done
+
+once the remote is done, the local-exec runs and copies the k3s.yaml config file
+into our cloud9 instance
+
+

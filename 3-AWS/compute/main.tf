@@ -58,6 +58,16 @@ resource "aws_instance" "tf_ec2_node" {
     volume_size = var.vol_size
   }
 
+  provisioner "remote-exec" {
+   connection {
+     type = "ssh"
+     user = "ubuntu"
+     host = self.public_ip
+     private_key = file("/home/ubuntu/.ssh/tf_key")
+   } 
+   
+   script = "${path.cwd}/delay.sh"
+  }
   provisioner "local-exec" {
     command = templatefile("${path.root}/scp_script.tpl", {
       nodeip   = self.public_ip

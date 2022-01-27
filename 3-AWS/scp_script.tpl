@@ -1,4 +1,3 @@
-sleep 60
 scp -i /home/ubuntu/.ssh/tf_key \
 -o StrictHostKeyChecking=no \
 -o UserKnownHostsFile=/dev/null \
