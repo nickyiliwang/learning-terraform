@@ -14,3 +14,4 @@ variable "db_user" {}
 variable "db_password" {}
 variable "lb_target_group_arn" {}
 variable "tg_attach_port" {}
+variable "ssh_private_key_path" {}

@@ -46,19 +46,20 @@ module "load-balance" {
 }
 
 module "compute" {
-  source              = "./compute"
-  instance_count      = 1
-  instance_type       = "t3.micro"
-  public_sg           = module.networking.public_sg_out
-  public_subnets      = module.networking.public_subnets
-  vol_size            = 10
-  key_name            = "tfkey"
-  public_key_path     = "/home/ubuntu/.ssh/tf_key.pub"
-  user_data_path      = "${path.root}/user-data.tpl"
-  db_endpoint         = module.database.db_endpoint_out
-  db_name             = var.db_name
-  db_user             = var.db_user
-  db_password         = var.db_password
-  lb_target_group_arn = module.load-balance.lb_target_group_arn_out
-  tg_attach_port      = 8000
+  source               = "./compute"
+  instance_count       = 1
+  instance_type        = "t3.micro"
+  public_sg            = module.networking.public_sg_out
+  public_subnets       = module.networking.public_subnets
+  vol_size             = 10
+  key_name             = "tfkey"
+  public_key_path      = "/home/ubuntu/.ssh/tf_key.pub"
+  user_data_path       = "${path.root}/user-data.tpl"
+  db_endpoint          = module.database.db_endpoint_out
+  db_name              = var.db_name
+  db_user              = var.db_user
+  db_password          = var.db_password
+  lb_target_group_arn  = module.load-balance.lb_target_group_arn_out
+  tg_attach_port       = 8000
+  ssh_private_key_path = "/home/ubuntu/.ssh/tf_key"
 }

@@ -59,21 +59,27 @@ resource "aws_instance" "tf_ec2_node" {
   }
 
   provisioner "remote-exec" {
-   connection {
-     type = "ssh"
-     user = "ubuntu"
-     host = self.public_ip
-     private_key = file("/home/ubuntu/.ssh/tf_key")
-   } 
-   
-   script = "${path.cwd}/delay.sh"
+    connection {
+      type        = "ssh"
+      user        = "ubuntu"
+      host        = self.public_ip
+      private_key = file(var.ssh_private_key_path)
+    }
+
+    script = "${path.cwd}/delay.sh"
   }
   provisioner "local-exec" {
-    command = templatefile("${path.root}/scp_script.tpl", {
-      nodeip   = self.public_ip
-      k3s_path = "${path.root}/../"
-      nodename = self.tags.Name
+    command = templatefile("${path.cwd}/scp_script.tpl", {
+      private_key = file(var.ssh_private_key_path)
+      nodeip      = self.public_ip
+      k3s_path    = "${path.cwd}/../"
+      nodename    = self.tags.Name
+
     })
+  }
+  provisioner "local-exec" {
+    when    = destroy
+    command = "rm -f ${path.cwd}/../k3s-${self.tags.Name}.yaml"
   }
 }
 
