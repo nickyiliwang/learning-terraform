@@ -258,7 +258,7 @@ to access the root path => user-data.tpl template
   user_data_path = "${path.root/user-data.tpl}"
   
 ## SSh into the K3 cluster and checking for the running k3 node
-ssh -i ~/.ssh/<your key name> ubuntu@<ec2 public ip>
+ssh -i ~/.ssh/<your private key name> ubuntu@<ec2 public ip>
 kubectl get nodes
 
 ## Deploying NGINX to kube and exposing it
@@ -291,3 +291,36 @@ will make sure port 8000 is exposed to the intenet
 output lb_target_group_arn_out, value = aws_lb_target_group.tf_tg.arn
 <!--import the value into the compute module-->
 lb_target_group_arn = module.load-balance.lb_target_group_arn_out
+
+## Accessing Sensistive outputs
+Even if output with the sensitive tag set to true, you might not be able to access
+some values, such as user-data from the aws_instance resource.
+output "instances" {
+    value = {for i in module.compute.instances : i.tags.Name => i.public_ip}
+        sensitive = true
+}
+
+OUTPUT: 
+{
+  <OUTPUT NAME>: {
+    "type": [
+      "object",
+      {
+        "tf_k3_ec2_node-33895": "string",
+        "tf_k3_ec2_node-45008": "string"
+      }
+    ],
+    "value": {
+      "tf_k3_ec2_node-33895": "16.170.224.159",
+      "tf_k3_ec2_node-45008": "13.53.53.248"
+    }
+  }
+}
+
+Solution:
+tf output -json | jq '."<OUTPUT NAME>"."value"'
+will give us:
+{
+  "tf_k3_ec2_node-33895": "16.170.224.159",
+  "tf_k3_ec2_node-45008": "13.53.53.248"
+}

@@ -60,10 +60,10 @@ resource "aws_instance" "tf_ec2_node" {
 
 }
 
-// Placing each ec2 instance (id) into the target group we have in the networking modnule
+// Placing each ec2 instance (id) into the target group we have in the networking module
 resource "aws_lb_target_group_attachment" "tf_tg_attach" {
-  count = var.instance_count
+  count            = var.instance_count
   target_group_arn = var.lb_target_group_arn
-  target_id = aws_instance.tf_ec2_node[count.index].id
-  port = 8000
+  target_id        = aws_instance.tf_ec2_node[count.index].id
+  port             = var.tg_attach_port
 }
