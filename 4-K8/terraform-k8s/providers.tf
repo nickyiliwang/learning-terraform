@@ -1,3 +1,7 @@
+locals {
+  config = data.terraform_remote_state.kubeconfig_from_node.outputs.kubeconfig
+}
+
 terraform {
   required_providers {
     kubernetes = {
@@ -7,5 +11,5 @@ terraform {
 }
 
 provider "kubernetes" {
-  config_path = "../123.yaml"
+  config_path = split("=", local.config[0])[1]
 }
