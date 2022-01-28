@@ -4,6 +4,7 @@
 1. [Basics on TF](./1-basics/BASICS.md) 
 2. [TF Modules](./2-modules/MODULES.md) 
 3. [Deploy on AWS](./3-AWS/AWS.md) 
+4. [Deplying K8 resources with tf](./4-K8/K8.md)
 
 ## Misc
 curl command for public ip:
