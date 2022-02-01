@@ -9,7 +9,7 @@ resource "github_repository" "tf_repo" {
   visibility = "private"
 }
 
-resource "github_branch" "default" {
+resource "github_branch_default" "default" {
   repository = github_repository.tf_repo.name
   branch     = "main"
 }
