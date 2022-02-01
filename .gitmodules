@@ -1,0 +1,3 @@
+[submodule "terraform-aws-compute"]
+	path = terraform-aws-compute
+	url = https://github.com/derekops/terraform-aws-compute.git
