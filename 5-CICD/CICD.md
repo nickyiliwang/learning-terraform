@@ -19,3 +19,12 @@ Publishing a module:
 1. Tag your github repo (git tag -a xxx)
 2. Create a module in the tf dashboard registry => module
 
+Using the Configuration designer:
+1. Add both the compute and networkng modules
+2. Add required variables
+3. download the main.tf output after config is done
+
+Deployment repo / Control center (tf-control folder)
+1. controller main.tf is /deployments/tf-dev/main.tf
+2. Any modules(networking, compute) within the organization(nickyilwang) is available to use
+3. Setup the providers and tfvars file containing github_token, github_owner, tfe_token
