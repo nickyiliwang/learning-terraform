@@ -28,3 +28,10 @@ Deployment repo / Control center (tf-control folder)
 1. controller main.tf is /deployments/tf-dev/main.tf
 2. Any modules(networking, compute) within the organization(nickyilwang) is available to use
 3. Setup the providers and tfvars file containing github_token, github_owner, tfe_token
+
+Updateing module repository
+1. Change the code in moudle repos
+2. push new version with tag + 1 (v1.0.0 => v1.0.1)
+3. In the /5-CICD/tf-control/deployments/tf-dev/main.tf
+4. reference the new version id
+5. 

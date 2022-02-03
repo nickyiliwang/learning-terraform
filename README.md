@@ -1,7 +1,7 @@
 # Learning terraform 
 
 ## Notes
-1. [Basics on TF](./1-basics/BASICS.md) 
+1. [TF Basics](./1-basics/BASICS.md) 
 2. [TF Modules](./2-modules/MODULES.md) 
 3. [Deploy on AWS](./3-AWS/AWS.md) 
 4. [Remote K8](./4-K8/K8.md)
